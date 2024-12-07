@@ -4,16 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentiment Analysis</title>
+    <!-- Google Fonts for better typography -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+        }
+
+        /* Centered Form Styles */
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            resize: none;
+            background-color: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #2575fc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6a11cb;
+            transform: scale(1.05);
+        }
+
+        /* Result Styling */
+        .result {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .result.positive {
+            color: #4CAF50;
+        }
+
+        .result.negative {
+            color: #F44336;
+        }
+
+        .result.neutral {
+            color: #FF9800;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 1rem;
+            }
+
+            textarea {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Gradient animation */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Sentiment Analysis</h1>
-    <form method="post">
-        {% csrf_token %}
-        <textarea name="text" rows="4" cols="50" placeholder="Enter text here..."></textarea><br>
-        <button type="submit">Analyze Sentiment</button>
-    </form>
-    {% if result %}
-        <h2>Result: {{ result }}</h2>
-    {% endif %}
+    <div class="container">
+        <h1>Sentiment Analysis</h1>
+        <form method="post" id="sentimentForm">
+            {% csrf_token %}
+            <textarea name="text" rows="4" placeholder="Enter text here..."></textarea><br>
+            <button type="submit">Analyze Sentiment</button>
+        </form>
+
+        <!-- Loading Spinner -->
+        <div class="loading" id="loadingMessage">Analyzing...</div>
+
+        <!-- Result -->
+        {% if result %}
+            <div class="result {% if result == 'positive' %}positive{% elif result == 'negative' %}negative{% else %}neutral{% endif %}">
+                <h2>Result: {{ result }}</h2>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Handling form submission to display loading message
+        const form = document.getElementById('sentimentForm');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        form.addEventListener('submit', function (e) {
+            // Show loading spinner when form is submitted
+            loadingMessage.classList.add('show');
+        });
+    </script>
 </body>
 </html>
